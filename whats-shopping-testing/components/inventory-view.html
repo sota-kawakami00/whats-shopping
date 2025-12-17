@@ -1,0 +1,17 @@
+<!-- 在庫一覧画面 -->
+<div id="inventory-view" class="view active">
+    <div class="controls">
+        <label for="sort-select">並び替え:</label>
+        <select id="sort-select" class="sort-select">
+            <option value="expiry-asc">賞味期限が近い順</option>
+            <option value="expiry-desc">賞味期限が遠い順</option>
+            <option value="consume-asc">消費期限が近い順</option>
+            <option value="consume-desc">消費期限が遠い順</option>
+            <option value="purchase-asc">購入日が古い順</option>
+            <option value="purchase-desc">購入日が新しい順</option>
+            <option value="name-asc">商品名順（あ→ん）</option>
+            <option value="name-desc">商品名順（ん→あ）</option>
+        </select>
+    </div>
+    <div id="inventory-list" class="inventory-list"></div>
+</div>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>買い物管理アプリ</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/@zxing/library@latest"></script>
+</head>
+<body>
+    <!-- ローディング画面 -->
+    <div id="loading" class="loading-overlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- 招待コード画面 -->
+    <div id="invite-screen-container"></div>
+
+    <!-- 承認成功画面 -->
+    <div id="success-screen-container"></div>
+
+    <!-- メイン画面 -->
+    <div class="container" id="main-container" style="display: none;">
+        <!-- ヘッダー -->
+        <div id="header-container"></div>
+
+        <!-- 在庫一覧画面 -->
+        <div id="inventory-view-container"></div>
+
+        <!-- 商品登録画面 -->
+        <div id="add-item-view-container"></div>
+
+        <!-- 消費履歴画面 -->
+        <div id="history-view-container"></div>
+
+        <!-- 管理画面 -->
+        <div id="admin-view-container"></div>
+    </div>
+
+    <!-- カメラモーダル -->
+    <div id="camera-modal-container"></div>
+
+    <script src="component-loader.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

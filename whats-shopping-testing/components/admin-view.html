@@ -1,0 +1,25 @@
+<!-- 管理画面 -->
+<div id="admin-view" class="view">
+    <div class="form-section">
+        <h2>JAN商品登録</h2>
+        <form id="admin-form">
+            <div class="form-group">
+                <label for="admin-jan">JANコード:</label>
+                <div class="input-with-button">
+                    <input type="text" id="admin-jan" placeholder="JANコード" required>
+                    <button type="button" id="admin-scan-btn" class="scan-btn">カメラ</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="admin-product-name">商品名:</label>
+                <input type="text" id="admin-product-name" placeholder="商品名" required>
+            </div>
+            <button type="submit" class="submit-btn">JAN商品登録</button>
+        </form>
+
+        <div class="registered-products">
+            <h3>登録済み商品一覧</h3>
+            <div id="jan-product-list" class="jan-product-list"></div>
+        </div>
+    </div>
+</div>

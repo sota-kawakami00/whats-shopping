@@ -1,0 +1,39 @@
+<!-- 商品登録画面 -->
+<div id="add-item-view" class="view">
+    <div class="form-section">
+        <h2>商品登録</h2>
+        <form id="add-item-form">
+            <div class="form-group">
+                <label for="jan-input">JANコード:</label>
+                <div class="input-with-button">
+                    <input type="text" id="jan-input" placeholder="JANコードを入力">
+                    <button type="button" id="scan-btn" class="scan-btn">カメラ</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="product-name">商品名:</label>
+                <div class="autocomplete-container">
+                    <input type="text" id="product-name" placeholder="商品名" required>
+                    <div id="product-suggestions" class="suggestions-dropdown"></div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="purchase-date">購入日:</label>
+                <input type="date" id="purchase-date" required>
+            </div>
+            <div class="form-group">
+                <label for="expiry-date">賞味期限:</label>
+                <input type="date" id="expiry-date">
+            </div>
+            <div class="form-group">
+                <label for="consume-date">消費期限:</label>
+                <input type="date" id="consume-date">
+            </div>
+            <div class="form-group">
+                <label for="quantity">個数:</label>
+                <input type="number" id="quantity" min="1" value="1" required>
+            </div>
+            <button type="submit" class="submit-btn">登録</button>
+        </form>
+    </div>
+</div>

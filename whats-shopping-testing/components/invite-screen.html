@@ -1,0 +1,20 @@
+<!-- 招待コード画面 -->
+<div id="invite-screen" class="invite-screen">
+    <div class="invite-container">
+        <h1>🛒 買い物管理アプリ</h1>
+
+        <form id="invite-form" class="invite-form">
+            <div class="invite-code-inputs">
+                <input type="text" id="invite-code-1" class="invite-code-input" maxlength="1" inputmode="numeric" pattern="[0-9]" required>
+                <input type="text" id="invite-code-2" class="invite-code-input" maxlength="1" inputmode="numeric" pattern="[0-9]" required>
+                <input type="text" id="invite-code-3" class="invite-code-input" maxlength="1" inputmode="numeric" pattern="[0-9]" required>
+                <input type="text" id="invite-code-4" class="invite-code-input" maxlength="1" inputmode="numeric" pattern="[0-9]" required>
+            </div>
+            <div id="invite-error" class="invite-error"></div>
+            <button type="submit" id="invite-submit" class="invite-submit-btn">
+                <span class="btn-text">開始</span>
+                <span class="btn-loading">認証中...</span>
+            </button>
+        </form>
+    </div>
+</div>

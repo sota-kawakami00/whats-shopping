@@ -424,6 +424,59 @@ body {
     margin-top: 15px;
 }
 
+#manual-input-section {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+#manual-input-section p {
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #666;
+}
+
+#manual-jan-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+/* モバイル用の改良 */
+@media (max-width: 768px) {
+    #camera-video {
+        max-width: 90vw;
+        height: auto;
+    }
+
+    .camera-controls {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .camera-controls .btn {
+        flex: 1;
+        min-width: 120px;
+    }
+}
+
 .btn {
     background-color: var(--gray-medium);
     color: var(--secondary-color);

@@ -83,6 +83,13 @@ class ShoppingApp {
         document.getElementById('stop-camera-btn').addEventListener('click', () => this.closeCamera());
         document.querySelector('.close').addEventListener('click', () => this.closeCamera());
 
+        // 手動入力
+        document.getElementById('manual-input-btn').addEventListener('click', () => this.toggleManualInput());
+        document.getElementById('manual-submit-btn').addEventListener('click', () => this.submitManualJan());
+        document.getElementById('manual-jan-input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') this.submitManualJan();
+        });
+
         // モーダル外クリック
         window.addEventListener('click', (e) => {
             const modal = document.getElementById('camera-modal');
@@ -819,21 +826,47 @@ class ShoppingApp {
     // カメラ開始
     async openCamera(targetInputId = 'jan-input') {
         try {
+            // カメラ利用可能性チェック
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                this.showMessage('このデバイスではカメラ機能をご利用いただけません', 'error');
+                return;
+            }
+
             const modal = document.getElementById('camera-modal');
             const video = document.getElementById('camera-video');
 
             modal.style.display = 'block';
 
+            // モバイル用カメラ設定を改良
+            const constraints = {
+                video: {
+                    facingMode: { ideal: 'environment' },
+                    width: { ideal: 1280 },
+                    height: { ideal: 720 }
+                }
+            };
+
             // カメラストリーム取得
-            const stream = await navigator.mediaDevices.getUserMedia({
-                video: { facingMode: 'environment' }
+            const stream = await navigator.mediaDevices.getUserMedia(constraints);
+            video.srcObject = stream;
+
+            // ビデオの準備完了を待つ
+            await new Promise((resolve) => {
+                video.onloadedmetadata = () => {
+                    video.play();
+                    resolve();
+                };
             });
 
-            video.srcObject = stream;
+            // ZXingライブラリの存在チェック
+            if (typeof ZXing === 'undefined') {
+                this.showMessage('バーコードリーダーの読み込みに失敗しました', 'error');
+                this.closeCamera();
+                return;
+            }
 
             // ZXingライブラリでバーコードスキャン
             const codeReader = new ZXing.BrowserBarcodeReader();
-
             this.currentTargetInput = targetInputId;
 
             codeReader.decodeFromVideoDevice(undefined, video, async (result, err) => {
@@ -854,6 +887,8 @@ class ShoppingApp {
 
                     this.closeCamera();
                     this.showMessage(`JANコード ${janCode} を読み取りました`, 'success');
+                } else if (err && !(err instanceof ZXing.NotFoundException)) {
+                    console.error('バーコード読み取りエラー:', err);
                 }
             });
 
@@ -861,16 +896,90 @@ class ShoppingApp {
 
         } catch (err) {
             console.error('カメラアクセスエラー:', err);
-            this.showMessage('カメラにアクセスできませんでした', 'error');
+            let errorMessage = 'カメラにアクセスできませんでした';
+
+            if (err.name === 'NotAllowedError') {
+                errorMessage = 'カメラの使用が許可されていません。ブラウザの設定でカメラアクセスを許可してください';
+            } else if (err.name === 'NotFoundError') {
+                errorMessage = 'カメラが見つかりません';
+            } else if (err.name === 'NotSupportedError') {
+                errorMessage = 'このブラウザではカメラ機能がサポートされていません';
+            } else if (err.name === 'NotReadableError') {
+                errorMessage = 'カメラが他のアプリケーションで使用中です';
+            }
+
+            this.showMessage(errorMessage, 'error');
         }
+    }
+
+    // 手動入力の表示切り替え
+    toggleManualInput() {
+        const section = document.getElementById('manual-input-section');
+        const btn = document.getElementById('manual-input-btn');
+        const cameraContainer = document.getElementById('camera-container');
+
+        if (section.style.display === 'none') {
+            section.style.display = 'block';
+            cameraContainer.style.display = 'none';
+            btn.textContent = 'カメラに戻る';
+            document.getElementById('manual-jan-input').focus();
+        } else {
+            section.style.display = 'none';
+            cameraContainer.style.display = 'block';
+            btn.textContent = '手動入力';
+        }
+    }
+
+    // 手動入力されたJANコードの処理
+    async submitManualJan() {
+        const input = document.getElementById('manual-jan-input');
+        const janCode = input.value.trim();
+
+        // JANコードのバリデーション
+        if (!janCode) {
+            this.showMessage('JANコードを入力してください', 'error');
+            return;
+        }
+
+        if (!/^\d{13}$/.test(janCode)) {
+            this.showMessage('JANコードは13桁の数字で入力してください', 'error');
+            return;
+        }
+
+        // ターゲット入力フィールドに設定
+        if (this.currentTargetInput) {
+            document.getElementById(this.currentTargetInput).value = janCode;
+
+            // 商品登録画面の場合のみ商品名検索
+            if (this.currentTargetInput === 'jan-input') {
+                if (this.janProducts[janCode]) {
+                    document.getElementById('product-name').value = this.janProducts[janCode];
+                } else {
+                    await this.searchProductByJan(janCode);
+                }
+            }
+        }
+
+        this.closeCamera();
+        this.showMessage(`JANコード ${janCode} を入力しました`, 'success');
     }
 
     // カメラ停止
     closeCamera() {
         const modal = document.getElementById('camera-modal');
         const video = document.getElementById('camera-video');
+        const manualSection = document.getElementById('manual-input-section');
+        const cameraContainer = document.getElementById('camera-container');
+        const manualBtn = document.getElementById('manual-input-btn');
+        const manualInput = document.getElementById('manual-jan-input');
 
         modal.style.display = 'none';
+
+        // UIをリセット
+        manualSection.style.display = 'none';
+        cameraContainer.style.display = 'block';
+        manualBtn.textContent = '手動入力';
+        manualInput.value = '';
 
         // ストリーム停止
         if (video.srcObject) {
@@ -884,6 +993,8 @@ class ShoppingApp {
             this.scanner.reset();
             this.scanner = null;
         }
+
+        this.currentTargetInput = null;
     }
 
     // メッセージ表示

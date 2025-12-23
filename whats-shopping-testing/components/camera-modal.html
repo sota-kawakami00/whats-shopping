@@ -3,9 +3,17 @@
     <div class="modal-content">
         <span class="close">&times;</span>
         <h3>JANコードを読み取り</h3>
-        <video id="camera-video" autoplay></video>
+        <div id="camera-container">
+            <video id="camera-video" autoplay playsinline></video>
+        </div>
         <div class="camera-controls">
             <button id="stop-camera-btn" class="btn">キャンセル</button>
+            <button id="manual-input-btn" class="btn btn-secondary">手動入力</button>
+        </div>
+        <div id="manual-input-section" style="display: none;">
+            <p>カメラが利用できない場合は手動でJANコードを入力してください：</p>
+            <input type="text" id="manual-jan-input" placeholder="JANコード（13桁）" maxlength="13" pattern="[0-9]{13}">
+            <button id="manual-submit-btn" class="btn">確定</button>
         </div>
     </div>
 </div>
